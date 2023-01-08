@@ -118,4 +118,47 @@ test_scaled2 = ss.transform(test_input2)
 
 ### ML 모델 학습
 
--
+#### 본문 내용을 제외한 특성으로 학습
+<img src="https://user-images.githubusercontent.com/112039781/211187590-2a447b1a-8150-4748-9684-4dce5818fb55.png">
+
+### ※ 사용 모델
+
+**① RandomForestClassifier**
+
+◆ 선정이유
++ 과대적합 문제 최소화하여 모델의 정확도 향상
++ 대용량 데이터 처리에 효과적
++ Classification 및 Regression 문제에 모두 사용 가능
+
+**② ExtraTreesClassifier**
+
+◆ 선정이유
++  feature중에 아무거나 고른 다음 그 feature에 대해 최적의 Node를 분할
++ 준수한 성능을 보이며 과대적합을 막고 검증 세트의 점수를 높이는 효과가 있음.
++ 속도가 빠르다는 장점이 있음.
+<img src="https://media.discordapp.net/attachments/1022477080031666276/1061568202531934268/image.png">
+
+
+#### 본문 내용만을 이용한 학습
+
+- 본문 내용을 제외한 특성들은 특정 토큰으로 치환
+<img src="https://user-images.githubusercontent.com/112039781/211188300-3797c0d6-ccec-49d8-8b36-95aa1660063d.png">
+
+#### ※ 사용 모델
+
+
+RandomForestClassifier, ExtraTreesClassifier이외에 추가로 2개 더 선정
+
+**③ LogisticRegression**
+
+◆ 선정이유
++ 로지스틱 회귀는 매우 효율적이고 엄청난 양의 계산 리소스를 필요로 하지 않기 때문에 널리 사용됨.
++ 쉽게 구현되고 학습하기 쉬우므로 다른 복잡한 알고리즘의 성능을 측정하는 데 도움이 되는 훌륭한 기준이 됨.
+
+**④ *AdaBoostClassifier**
+
+◆ 선정이유
++ AdaBoost는 구현하기 쉬움.
++ 약한 분류기의 실수를 반복적으로 수정하고 약한 학습자를 결합하여 정확도를 높임.
++ andomForest와 비교하였을 때 대체로 boosting이 속도가 더 빠르고 결과가 더 좋게 나옴.
+<img src="https://media.discordapp.net/attachments/1022477080031666276/1061574330611413072/image.png">
