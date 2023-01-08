@@ -71,13 +71,51 @@ food.restaurant_get()
 ##
 
 ### 전처리
-- Null값 확인 및 제거
++ Null 값 및 중복값 확인 및 제거
 ```
 data.dropna(inplace=True)
+data = data.drop_duplicates(['body'],keep='first')
 ```
-- 한글 형태소 분석기(Okt)를 활용해 형태소 토큰화 및 품사 태깅
-- 불용어 사전 작성 및 제거
-([불용어 사전](https://github.com/jeongwoo96/-AdvertisingClassification/blob/main/nsmc_stopwords_5%EC%B0%A8.txt))
--정규 표현식을 활용해 한글 및 공백을 제외한 문자 제거
-- 광고글 분석에 유의미한 명사, 동사, 형용사 를 제외한 품사 제거
-- StandardScaler를 활용한 본문을 제외한 나머지 특성 (이미지 수(Img), 비디오 유무(Video), 지도 유무(Map), ...) 표준화 작업
++ 정규 표현식을 활용해 한글 및 공백을 제외한 문자 제거
++ 한글 형태소 분석기인 Okt를 활용해 형태소 토큰화 및 품사태깅
++ 불용어사전 작성 및 불용어 제거(불용어사전 : ['nsmc_stopwords_5차.txt'](https://github.com/Yeons2013/AdvertisingClassification/blob/master/nsmc_stopwords_5%EC%B0%A8.txt))
++ 광고 글 구분에 유의미한 명사, 형용사, 동사를 제외한 품사 제거
+```
+def preprocessing(review):
+    okt = Okt()
+    
+    # 불용어 22,678개
+    f = open('nsmc_stopwords_5차.txt')
+    stop_words = f.read().split()
+    
+    # 1. 한글 및 공백을 제외한 문자 모두 제거. → 한글 이외의 문자는 광고 구분에 중요하지 않다고 판단
+    review_text = re.sub("[^가-힣\\s]", "", review)
+    
+    # 2. okt 객체를 활용해서 형태소 토큰화 + 품사 태깅
+    word_review = okt.pos(review_text, stem=True)
+
+    # 3. 노이즈 & 불용어 제거 → 광고 구분에 유의미한 토큰을만을 선별하기 위한 작업
+    word_review = [(token, pos) for token, pos in word_review if not token in stop_words and len(token) > 1]
+ 
+    # 4. 명사, 동사, 형용사 추출
+    word_review = [token for token, pos in word_review if pos in ['Noun', 'Verb', 'Adjective']]
+    
+    return word_review
+```
++ Standard Scaler를 활용해 본문을 제외한 나머지 (ex>이미지개수, 스티커수, 문장길이..) 특성 표준화 작업
+```
+from sklearn.preprocessing import StandardScaler
+
+ss = StandardScaler()
+ss.fit(train_input2)
+
+train_scaled2 = ss.transform(train_input2)
+test_scaled2 = ss.transform(test_input2)
+```
++ TF-IDF Vectorizer를 활용한 본문 벡터화
+
+##
+
+### ML 모델 학습
+
+-
