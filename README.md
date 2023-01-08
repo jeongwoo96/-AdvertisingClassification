@@ -3,7 +3,12 @@
 Fisrt mini project
 
 텍스트마이닝 & 을 이용해 블로그 광고글 구분하기
-
+목록 | 파일명 | 설명 |
+------------|------|-------|
+맛집 크롤링 | [blog.py](https://github.com/jeongwoo96/-AdvertisingClassification/blob/main/blog.py)| 맛집 크롤링 모듈화 코드 |
+크롤링 실행 | [DataGet.ipynb](https://github.com/jeongwoo96/-AdvertisingClassification/blob/main/DataGet.ipynb)| 맛집 크롤링 실행 코드 |
+모델 학습 | [Train.ipynb](https://github.com/jeongwoo96/-AdvertisingClassification/blob/main/Train.ipynb)| 모델 실행 |
+불용어 사전 |[nsmc_stopwords_5차.txt](https://github.com/jeongwoo96/-AdvertisingClassification/blob/main/nsmc_stopwords_5%EC%B0%A8.txt)| 불용어 사전 |
 ---
 
 ### 프로젝트 목적
@@ -162,3 +167,44 @@ RandomForestClassifier, ExtraTreesClassifier이외에 추가로 2개 더 선정
 + 약한 분류기의 실수를 반복적으로 수정하고 약한 학습자를 결합하여 정확도를 높임.
 + andomForest와 비교하였을 때 대체로 boosting이 속도가 더 빠르고 결과가 더 좋게 나옴.
 <img src="https://media.discordapp.net/attachments/1022477080031666276/1061574330611413072/image.png">
+
+##
+
+### 성능 개선 시도
+
+**(1)GridSearchCV를 활용한 하이퍼파라미터 튜닝**
+
+- 그리드 서치는 모델 하이퍼 파라미터에 넣을 수 있는 값들을 모두 입력하고, 모든 경우의 수에 대해 모델을 만들고 성능을 평가해 그 중 모델 성능을 가장 높게 만드는 파라미터 값을 찾아준다.
+<img src="https://user-images.githubusercontent.com/112039781/211189061-05b33f42-0256-4fd2-bfe6-cdf4d2b4fa7b.png">
+
+#### ★ 리스트 값을 지속적으로 바꿔주면서 최적의 조합을 찾음
+
+##
+
+**(2)Ensemble** 
+
+◆ SoftVoting(다수의 classifier의 예측 결과값간 확률을 평균하여 최종 class를 결정)
+<img src="https://media.discordapp.net/attachments/1022477080031666276/1061578549154287646/image.png">
+
+◆ Hard Voting(다수의 classifier의 예측 결과값을 다수결로 최종 class를 결정)
+<img src="https://media.discordapp.net/attachments/1022477080031666276/1061579110402502776/image.png">
+#### (Soft Voting 시 더 높은 성능을 보였음.)
+
+##
+
+#### (3) 본문 이외의 특성으로 학습한 모델, 본문만으로 학습한 모델 Voting 후 Score
+<img src="https://media.discordapp.net/attachments/1022477080031666276/1061580072978489464/image.png">
+
+##
+
+### 결과 분석 및 한계점
+
+(1) 한계점
+- 주관적으로 설정한 기준을 바탕으로 라벨링을 했기 때문에 신뢰성의 한계 
+- 데이터로 사용한 네이버 블로그 글들의 경우 실제 후기처럼 속인 교묘한 광고가 많아 분류의 어려움
+- 카운트를 기반으로 한 텍스트 마이닝 & ML Model의 한계점(문장의 순서정보를 반영하지 못함)
+
+(2) 긍적적인 점
+- 불용어 제거와 같은 노동력이 투입된 전처리 방법으로 성능을 올림
+- 다양한 ML Model을 사용해봄
+- GridSearchCV, Voting을 활용해 성능 개선을 시도함
